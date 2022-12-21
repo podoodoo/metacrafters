@@ -235,9 +235,9 @@
         }
       }
     },
-    "5f34087b80cb92aedf8e093c8dfa393cd0563bef32c4e45bc23e950b63f11419": {
+    "7d48f1c8032a9531abdffd1af68ac488d99f802babe1cb83f2c7a4e6e9f3c406": {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x2c142a78ac3a3f01a469a1f76ba28567b43ee3b237d5a1215ca33f86c9e79e8c",
+      "txHash": "0x114b70816360e54941414772fc60abfaed2cc61f908fec395f94036eb6a74516",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -366,9 +366,9 @@
             "label": "proposals",
             "offset": 0,
             "slot": "351",
-            "type": "t_mapping(t_uint256,t_struct(Proposal)2103_storage)",
+            "type": "t_mapping(t_uint256,t_struct(Proposal)2091_storage)",
             "contract": "CustomTokenV2",
-            "src": "contracts/CustomTokenV2.sol:32"
+            "src": "contracts/CustomTokenV2.sol:38"
           },
           {
             "label": "numProposals",
@@ -376,7 +376,7 @@
             "slot": "352",
             "type": "t_uint256",
             "contract": "CustomTokenV2",
-            "src": "contracts/CustomTokenV2.sol:33"
+            "src": "contracts/CustomTokenV2.sol:39"
           }
         ],
         "types": {
@@ -412,16 +412,16 @@
             "label": "mapping(uint256 => address)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(Proposal)2103_storage)": {
-            "label": "mapping(uint256 => struct CustomTokenV2.Proposal)",
+          "t_mapping(t_uint256,t_struct(Proposal)2091_storage)": {
+            "label": "mapping(uint256 => struct Proposal)",
             "numberOfBytes": "32"
           },
           "t_string_storage": {
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Proposal)2103_storage": {
-            "label": "struct CustomTokenV2.Proposal",
+          "t_struct(Proposal)2091_storage": {
+            "label": "struct Proposal",
             "members": [
               {
                 "label": "id",

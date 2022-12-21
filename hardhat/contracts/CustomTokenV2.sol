@@ -9,6 +9,18 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import "./CustomToken.sol";
 
+struct Proposal {
+    uint256 id;
+    uint256 goal; // total price of proposal
+    uint256 pledged; // total tokens pledged
+    uint256 numAccounts; // total number of accounts
+    address recipient; // address of receiever of tokens
+    bool active; // current status of proposal
+    mapping(uint256 => address) accounts; // maps index to addresses of accounts
+    mapping(address => uint256) ledger; // maps address of an account to number of tokens pledged
+    // mapping(uint256 => mapping(address => uint256)) indexedAccountLedger; // possible implementation
+}
+
 contract CustomTokenV2 is
     Initializable,
     ERC20Upgradeable,
@@ -17,17 +29,11 @@ contract CustomTokenV2 is
     UUPSUpgradeable,
     CustomToken
 {
-    struct Proposal {
-        uint256 id;
-        uint256 goal; // total price of proposal
-        uint256 pledged; // total tokens pledged
-        uint256 numAccounts; // total number of accounts
-        address recipient; // address of receiever of tokens
-        bool active; // current status of proposal
-        mapping(uint256 => address) accounts; // maps index to addresses of accounts
-        mapping(address => uint256) ledger; // maps address of an account to number of tokens pledged
-        // mapping(uint256 => mapping(address => uint256)) indexedAccountLedger; // possible implementation
-    }
+    event ProposalCreated(uint256 _id, uint _goal, address _recipient);
+    event ProposalCancelled(uint _id);
+    event ProposalDisbursed(uint _id, uint _amount, address _recipient);
+    event TokensClaimed(address _to);
+    event TokensPledged(address _from, uint _proposalId);
 
     mapping(uint256 => Proposal) public proposals;
     uint256 public numProposals;
@@ -51,6 +57,7 @@ contract CustomTokenV2 is
      */
     function claim() public {
         mint(msg.sender, 100);
+        emit TokensClaimed(msg.sender);
     }
 
     /**
@@ -69,6 +76,8 @@ contract CustomTokenV2 is
         proposal.recipient = to;
         proposal.active = true;
 
+        emit ProposalCreated(numProposals - 1, _goal, to);
+
         return numProposals - 1;
     }
 
@@ -81,6 +90,7 @@ contract CustomTokenV2 is
         if (proposal.pledged >= proposal.goal) {
             // transferFrom();
             mint(proposal.recipient, proposal.pledged);
+            emit ProposalDisbursed(id, proposal.pledged, proposal.recipient);
         } else {
             // else, refund tokens to all addresses
             for (uint256 i = 0; i < proposal.numAccounts; i++) {
@@ -89,6 +99,7 @@ contract CustomTokenV2 is
                     proposal.ledger[proposal.accounts[i]]
                 );
                 // transferFrom();
+                emit ProposalCancelled(id);
             }
         }
     }
@@ -113,6 +124,8 @@ contract CustomTokenV2 is
         // send tokens from account to contract to hold
         // transfer(address(this), amount);
         burn(amount);
+
+        emit TokensPledged(msg.sender, amount);
     }
 
     function getPledge(
