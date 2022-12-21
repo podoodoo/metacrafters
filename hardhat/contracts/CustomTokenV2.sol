@@ -9,17 +9,6 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import "./CustomToken.sol";
 
-struct Proposal {
-    uint id;
-    uint goal; // total price of proposal
-    uint pledged; // total tokens pledged
-    uint numAccounts; // total number of accounts
-    bool active; // current status of proposal
-    address recipient; // address of receiever of tokens
-    mapping(uint => address) accounts; // maps index to addresses of accounts
-    mapping(address => uint) ledger; // maps address of an account to number of tokens pledged
-}
-
 contract CustomTokenV2 is
     Initializable,
     ERC20Upgradeable,
@@ -28,13 +17,23 @@ contract CustomTokenV2 is
     UUPSUpgradeable,
     CustomToken
 {
-    CustomToken public customTokenAddress;
+    struct Proposal {
+        uint256 id;
+        uint256 goal; // total price of proposal
+        uint256 pledged; // total tokens pledged
+        uint256 numAccounts; // total number of accounts
+        address recipient; // address of receiever of tokens
+        bool active; // current status of proposal
+        mapping(uint256 => address) accounts; // maps index to addresses of accounts
+        mapping(address => uint256) ledger; // maps address of an account to number of tokens pledged
+        // mapping(uint256 => mapping(address => uint256)) indexedAccountLedger; // possible implementation
+    }
 
-    mapping(uint => Proposal) public proposals;
-    uint public numProposals;
+    mapping(uint256 => Proposal) public proposals;
+    uint256 public numProposals;
 
-    modifier onlyActiveProposal(uint id) {
-        require(proposals[id].active == true);
+    modifier onlyActiveProposal(uint256 id) {
+        require(proposals[id].active == true, "Invalid Proposal.");
         _;
     }
 
@@ -43,14 +42,8 @@ contract CustomTokenV2 is
         _disableInitializers();
     }
 
-    function initialize(address _CustomToken) public initializer {
-        __ERC20_init("CustomToken", "CTK");
-        __ERC20Burnable_init();
-        __Ownable_init();
-        __UUPSUpgradeable_init();
-
-        require(_CustomToken != address(0), "Invalid Token Address.");
-        customTokenAddress = CustomToken(_CustomToken);
+    function initializeV2() public initializer {
+        super.initialize();
     }
 
     /**
@@ -61,9 +54,14 @@ contract CustomTokenV2 is
     }
 
     /**
-     * Creates Proposal to send tokens `to` address
+     * Creates Proposal for sending tokens `to` address
      */
-    function createProposal(uint _goal, address to) public returns (uint) {
+    function createProposal(
+        uint256 _goal,
+        address to
+    ) public returns (uint256) {
+        require(_goal > 0, "Invalid Goal.");
+
         Proposal storage proposal = proposals[numProposals];
         proposal.id = numProposals;
         proposal.goal = _goal;
@@ -74,35 +72,30 @@ contract CustomTokenV2 is
         return numProposals - 1;
     }
 
-    function endProposal(uint id) public onlyActiveProposal(id) {
+    function endProposal(uint256 id) public onlyActiveProposal(id) {
         Proposal storage proposal = proposals[id];
 
         proposal.active = false;
 
         // if total pledged tokens exceeds goal, disburse tokens to recipient
         if (proposal.pledged >= proposal.goal) {
-            customTokenAddress.transferFrom(
-                address(this),
-                proposal.recipient,
-                proposal.pledged
-            );
+            // transferFrom();
+            mint(proposal.recipient, proposal.pledged);
         } else {
             // else, refund tokens to all addresses
-            for (uint i = 0; i < proposal.numAccounts; i++) {
-                customTokenAddress.transferFrom(
-                    address(this),
+            for (uint256 i = 0; i < proposal.numAccounts; i++) {
+                mint(
                     proposal.accounts[i],
                     proposal.ledger[proposal.accounts[i]]
                 );
+                // transferFrom();
             }
         }
     }
 
-    function pledge(uint id, uint amount) public {
-        require(
-            customTokenAddress.balanceOf(msg.sender) >= amount,
-            "Insufficient Tokens."
-        );
+    function pledge(uint256 id, uint256 amount) public onlyActiveProposal(id) {
+        require(amount > 0, "Invalid Amount.");
+        require(balanceOf(msg.sender) >= amount, "Insufficient Tokens.");
 
         Proposal storage proposal = proposals[id];
 
@@ -114,10 +107,19 @@ contract CustomTokenV2 is
         }
 
         // update token amounts in proposal
-        proposal.ledger[msg.sender] += amount;
-        proposal.pledged += amount;
+        proposals[id].ledger[msg.sender] += amount;
+        proposals[id].pledged += amount;
 
-        customTokenAddress.transferFrom(msg.sender, address(this), amount);
+        // send tokens from account to contract to hold
+        // transfer(address(this), amount);
+        burn(amount);
+    }
+
+    function getPledge(
+        uint256 id,
+        address account
+    ) public view returns (uint256) {
+        return proposals[id].ledger[account];
     }
 
     receive() external payable {}

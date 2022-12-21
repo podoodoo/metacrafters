@@ -12,18 +12,48 @@
       "kind": "uups"
     },
     {
-      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0x88b367e533f665b9321fda423aa01dda723e142c162bfe40fa028d923c7aaf61",
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0x789a7d8fc8f07e792fbc402175589c75ac8d08c98ed0a406dcc5b8c7267f55ea",
       "kind": "uups"
     },
     {
-      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0x71ea52021800ebd2216b72a8daf626f9a623179aac72ea5c0e116d1a1c2474d5",
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0xa5c1f9dc022915825830a3db264259f64db6c6fb7b7ba845f7962393bd8cc1b9",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "txHash": "0x00d432c29abed86ca3726664bcbd18bffea299cf943e75127f7117cd2062509f",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+      "txHash": "0x0f1a904f7188678a0ae4fbf227e79ccc701257e9b788cd7fb6a0b6149f3ec6cb",
+      "kind": "uups"
+    },
+    {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x9b1b29cb0ff79e397c41bd0a5afdf4ca899bef159c0afd639c308cb8d4777e9e",
       "kind": "uups"
     },
     {
       "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x7d1b80d35cf6566d3d0ffaed6d314dccb38154d1e7147dafa67c488684429f7c",
+      "txHash": "0xc6dd1eb994a920a9d709b575d63426f70d8e1e9b8728e5fe29d49d39e73432ca",
+      "kind": "uups"
+    },
+    {
+      "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      "txHash": "0xae54afe39f30e482d358c6a5e62f8858701a88e5a9c136f7b4b3e077706c1108",
+      "kind": "uups"
+    },
+    {
+      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "txHash": "0x2f7e35f3e29ba80a9c72200a086f200a9627e816e817138e0a9b47f4f85b32cb",
+      "kind": "uups"
+    },
+    {
+      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "txHash": "0xcadff58ec3d0ef2d4dffb42f4e1de6831ed62f3d6cf6d7e93c5748a82ac15c9f",
       "kind": "uups"
     },
     {
@@ -35,7 +65,7 @@
   "impls": {
     "152cfcf744b4f793a2dcdf950244311c7f48d8ef953c4bf98165e15e48513bbb": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0xaf1fbb33b9d90a4464611bf650059bee80739c7f27212702859f55cb3230d879",
+      "txHash": "0xd8cd4b76f7a2cb72e191efe227f37f6d5eaaba37f3aab340334f73fec0d7ab3e",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -151,6 +181,14 @@
             "type": "t_array(t_uint256)50_storage",
             "contract": "UUPSUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "301",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "CustomToken",
+            "src": "contracts/CustomToken.sol:17"
           }
         ],
         "types": {
@@ -197,9 +235,9 @@
         }
       }
     },
-    "683cb35dab69fbb33c2e2fcc0ed29a48888e2858e2999b575bce3d3ca9a6ed4a": {
+    "5f34087b80cb92aedf8e093c8dfa393cd0563bef32c4e45bc23e950b63f11419": {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x9ee88b573daa7a5fd6890b200bbc29d042bac0685539b6c641908e0e5c12f71b",
+      "txHash": "0x2c142a78ac3a3f01a469a1f76ba28567b43ee3b237d5a1215ca33f86c9e79e8c",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -317,28 +355,28 @@
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
           },
           {
-            "label": "customTokenAddress",
+            "label": "__gap",
             "offset": 0,
             "slot": "301",
-            "type": "t_contract(CustomToken)2058",
-            "contract": "CustomTokenV2",
-            "src": "contracts/CustomTokenV2.sol:31"
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "CustomToken",
+            "src": "contracts/CustomToken.sol:17"
           },
           {
             "label": "proposals",
             "offset": 0,
-            "slot": "302",
-            "type": "t_mapping(t_uint256,t_struct(Proposal)2087_storage)",
+            "slot": "351",
+            "type": "t_mapping(t_uint256,t_struct(Proposal)2103_storage)",
             "contract": "CustomTokenV2",
-            "src": "contracts/CustomTokenV2.sol:33"
+            "src": "contracts/CustomTokenV2.sol:32"
           },
           {
             "label": "numProposals",
             "offset": 0,
-            "slot": "303",
+            "slot": "352",
             "type": "t_uint256",
             "contract": "CustomTokenV2",
-            "src": "contracts/CustomTokenV2.sol:34"
+            "src": "contracts/CustomTokenV2.sol:33"
           }
         ],
         "types": {
@@ -362,10 +400,6 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(CustomToken)2058": {
-            "label": "contract CustomToken",
-            "numberOfBytes": "20"
-          },
           "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
             "label": "mapping(address => mapping(address => uint256))",
             "numberOfBytes": "32"
@@ -378,16 +412,16 @@
             "label": "mapping(uint256 => address)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(Proposal)2087_storage)": {
-            "label": "mapping(uint256 => struct Proposal)",
+          "t_mapping(t_uint256,t_struct(Proposal)2103_storage)": {
+            "label": "mapping(uint256 => struct CustomTokenV2.Proposal)",
             "numberOfBytes": "32"
           },
           "t_string_storage": {
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Proposal)2087_storage": {
-            "label": "struct Proposal",
+          "t_struct(Proposal)2103_storage": {
+            "label": "struct CustomTokenV2.Proposal",
             "members": [
               {
                 "label": "id",
@@ -414,15 +448,15 @@
                 "slot": "3"
               },
               {
-                "label": "active",
-                "type": "t_bool",
+                "label": "recipient",
+                "type": "t_address",
                 "offset": 0,
                 "slot": "4"
               },
               {
-                "label": "recipient",
-                "type": "t_address",
-                "offset": 1,
+                "label": "active",
+                "type": "t_bool",
+                "offset": 20,
                 "slot": "4"
               },
               {

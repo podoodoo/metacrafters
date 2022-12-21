@@ -22,14 +22,17 @@ describe("CustomToken", function () {
             initializer: "initialize",
             kind: "uups"
         })
+
+        await customToken.deployed()
+
         const customTokenV2 = await upgrades.upgradeProxy(
             customToken,
             customTokenV2Factory,
             { kind: "uups" }
         )
 
-        await customTokenV2.deployed()
-
+        const token = await customTokenV2.deployed()
+        token.approve()
         return { customToken, customTokenV2, owner, account1, account2 }
     }
 
@@ -58,7 +61,7 @@ describe("CustomToken", function () {
                 100
             )
         })
-        it("Should have no initial tokens for contract", async function () {
+        it("Should have no tokens for contract", async function () {
             const { customToken, customTokenV2 } = await loadFixture(
                 deployCustomTokenFixture
             )
@@ -77,7 +80,7 @@ describe("CustomToken", function () {
 
             await customTokenV2.createProposal(10, account1.address)
 
-            const [id, goal, , , active, recipient] =
+            const [id, goal, , , recipient, active] =
                 await customTokenV2.proposals(0)
             expect(id.toNumber()).to.equal(0)
             expect(goal.toNumber()).to.equal(10)
@@ -100,77 +103,40 @@ describe("CustomToken", function () {
 
     describe("Transactions", function () {
         it("Should pledge tokens from account1", async function () {
-            const { customTokenV2, account1 } = await loadFixture(
+            const { customTokenV2, account1, account2 } = await loadFixture(
                 deployCustomTokenFixture
             )
-            await customTokenV2.connect(account1).claim()
 
-            expect(await customTokenV2.connect(account1))
+            await customTokenV2.createProposal(10, account2.address)
+            await customTokenV2.connect(account1).claim()
+            await customTokenV2.connect(account1).pledge(0, 5)
+            expect(await customTokenV2.getPledge(0, account1.address)).to.equal(
+                5
+            )
+        })
+        it("Should cancel a proposal and refund tokens", async function () {
+            const { customTokenV2, account1, account2 } = await loadFixture(
+                deployCustomTokenFixture
+            )
+            await customTokenV2.createProposal(10, account2.address)
+            await customTokenV2.connect(account1).claim()
+            await customTokenV2.connect(account1).pledge(0, 5)
+            await customTokenV2.endProposal(0)
+
+            expect(await customTokenV2.balanceOf(account1.address)).to.equal(
+                100
+            )
+        })
+        it("Should end a proposal and disburse tokens", async function () {
+            const { customTokenV2, account1, account2 } = await loadFixture(
+                deployCustomTokenFixture
+            )
+            await customTokenV2.createProposal(10, account2.address)
+            await customTokenV2.connect(account1).claim()
+            await customTokenV2.connect(account1).pledge(0, 10)
+            await customTokenV2.endProposal(0)
+
+            expect(await customTokenV2.balanceOf(account2.address)).to.equal(10)
         })
     })
-
-    // describe("Withdrawals", function () {
-    //     describe("Validations", function () {
-    //         it("Should revert with the right error if called too soon", async function () {
-    //             const { lock } = await loadFixture(deployOneYearLockFixture)
-
-    //             await expect(lock.withdraw()).to.be.revertedWith(
-    //                 "You can't withdraw yet"
-    //             )
-    //         })
-
-    //         it("Should revert with the right error if called from another account", async function () {
-    //             const { lock, unlockTime, otherAccount } = await loadFixture(
-    //                 deployOneYearLockFixture
-    //             )
-
-    //             // We can increase the time in Hardhat Network
-    //             await time.increaseTo(unlockTime)
-
-    //             // We use lock.connect() to send a transaction from another account
-    //             await expect(
-    //                 lock.connect(otherAccount).withdraw()
-    //             ).to.be.revertedWith("You aren't the owner")
-    //         })
-
-    //         it("Shouldn't fail if the unlockTime has arrived and the owner calls it", async function () {
-    //             const { lock, unlockTime } = await loadFixture(
-    //                 deployOneYearLockFixture
-    //             )
-
-    //             // Transactions are sent using the first signer by default
-    //             await time.increaseTo(unlockTime)
-
-    //             await expect(lock.withdraw()).not.to.be.reverted
-    //         })
-    //     })
-
-    //     describe("Events", function () {
-    //         it("Should emit an event on withdrawals", async function () {
-    //             const { lock, unlockTime, lockedAmount } = await loadFixture(
-    //                 deployOneYearLockFixture
-    //             )
-
-    //             await time.increaseTo(unlockTime)
-
-    //             await expect(lock.withdraw())
-    //                 .to.emit(lock, "Withdrawal")
-    //                 .withArgs(lockedAmount, anyValue) // We accept any value as `when` arg
-    //         })
-    //     })
-
-    //     describe("Transfers", function () {
-    //         it("Should transfer the funds to the owner", async function () {
-    //             const { lock, unlockTime, lockedAmount, owner } =
-    //                 await loadFixture(deployOneYearLockFixture)
-
-    //             await time.increaseTo(unlockTime)
-
-    //             await expect(lock.withdraw()).to.changeEtherBalances(
-    //                 [owner, lock],
-    //                 [lockedAmount, -lockedAmount]
-    //             )
-    //         })
-    //     })
-    // })
 })

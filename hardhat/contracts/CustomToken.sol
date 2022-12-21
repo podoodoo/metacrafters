@@ -14,6 +14,8 @@ contract CustomToken is
     OwnableUpgradeable,
     UUPSUpgradeable
 {
+    uint256[50] __gap;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
